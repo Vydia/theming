@@ -15,12 +15,13 @@ export default function createWithTheme(CHANNEL = channel) {
       constructor(props, context) {
         super(props, context);
         this.state = { theme: themeListener.initial(context) };
-        this.setTheme = theme => this.setState({ theme });
+        this.setTheme = theme => !this.willUnmount && this.setState({ theme });
       }
       componentDidMount() {
         this.unsubscribe = themeListener.subscribe(this.context, this.setTheme);
       }
       componentWillUnmount() {
+        this.willUnmount = true;
         if (typeof this.unsubscribe === 'function') {
           this.unsubscribe();
         }
